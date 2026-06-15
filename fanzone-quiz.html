@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Fan Zone – Équipe de France 🇫🇷</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700;900&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bleu: #002395;
+    --rouge: #ED2939;
+    --or: #C9A84C;
+    --blanc: #FFFFFF;
+    --fond: #07071A;
+    --fond2: #0D0D2B;
+    --carte: #111130;
+    --gris: #8888AA;
+  }
+
+  body {
+    background: var(--fond);
+    color: var(--blanc);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── FOND STADE ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 40% at 50% 0%, rgba(0,35,149,0.35) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 30% at 20% 100%, rgba(237,41,57,0.15) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 30% at 80% 100%, rgba(201,168,76,0.1) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Lumières stade */
+  .stade-lights {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 8px;
+    background: linear-gradient(90deg,
+      transparent 0%, var(--or) 15%, transparent 20%,
+      transparent 35%, var(--blanc) 45%, transparent 50%,
+      transparent 65%, var(--or) 75%, transparent 80%,
+      transparent 95%, var(--blanc) 100%);
+    opacity: 0.6;
+    z-index: 10;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 0 16px 60px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    text-align: center;
+    padding: 32px 0 24px;
+  }
+
+  .hero-flag {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+
+  .hero-flag span {
+    display: block;
+    width: 14px;
+    height: 40px;
+    border-radius: 3px;
+  }
+  .hero-flag .f1 { background: var(--bleu); }
+  .hero-flag .f2 { background: var(--blanc); }
+  .hero-flag .f3 { background: var(--rouge); }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 12vw, 64px);
+    letter-spacing: 3px;
+    line-height: 1;
+    color: var(--blanc);
+    text-shadow: 0 0 30px rgba(0,35,149,0.8), 0 0 60px rgba(0,35,149,0.4);
+  }
+
+  .hero-title span {
+    color: var(--or);
+    display: block;
+    font-size: clamp(22px, 7vw, 38px);
+    letter-spacing: 8px;
+  }
+
+  .hero-subtitle {
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--gris);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* ── SCORE BAR ── */
+  .score-bar {
+    background: var(--carte);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 16px;
+    padding: 14px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 0 28px;
+  }
+
+  .score-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--gris);
+  }
+
+  .score-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: var(--or);
+    line-height: 1;
+  }
+
+  .progress-wrap {
+    flex: 1;
+    margin: 0 16px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 99px;
+    height: 6px;
+    overflow: hidden;
+  }
+
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--bleu), var(--or));
+    border-radius: 99px;
+    transition: width 0.4s ease;
+  }
+
+  /* ── CARTE PANINI ── */
+  .card-panini {
+    background: var(--carte);
+    border-radius: 20px;
+    border: 2px solid rgba(201,168,76,0.2);
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04);
+    animation: slideUp 0.4s ease;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-header {
+    background: linear-gradient(135deg, var(--bleu) 0%, #001580 100%);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .card-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    color: rgba(255,255,255,0.15);
+    line-height: 1;
+  }
+
+  .card-badge {
+    background: var(--or);
+    color: var(--fond);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 99px;
+  }
+
+  .card-img-wrap {
+    position: relative;
+    background: linear-gradient(180deg, #151540 0%, #0A0A2A 100%);
+    padding: 24px 24px 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* CANVA SLIDE EMBED */
+  .canva-embed {
+    width: 100%;
+    max-width: 340px;
+    aspect-ratio: 16/9;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+    background: #0D0D2B;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .canva-embed iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  .canva-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 24px;
+    text-align: center;
+  }
+
+  .eye-icon {
+    width: 56px;
+    height: 56px;
+    background: rgba(0,35,149,0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+  }
+
+  .canva-placeholder p {
+    font-size: 12px;
+    color: var(--gris);
+    line-height: 1.5;
+  }
+
+  .slide-instruction {
+    font-size: 11px;
+    color: var(--or);
+    text-align: center;
+    padding: 8px 16px 16px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── QUESTION ZONE ── */
+  .question-zone {
+    padding: 20px;
+  }
+
+  .question-text {
+    font-size: 13px;
+    color: var(--gris);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+  }
+
+  .input-wrap {
+    position: relative;
+  }
+
+  .input-wrap input {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 2px solid rgba(255,255,255,0.12);
+    border-radius: 12px;
+    padding: 16px 48px 16px 16px;
+    color: var(--blanc);
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+    -webkit-appearance: none;
+  }
+
+  .input-wrap input:focus {
+    border-color: var(--or);
+    background: rgba(201,168,76,0.06);
+  }
+
+  .input-wrap input::placeholder {
+    color: rgba(255,255,255,0.25);
+    font-weight: 400;
+  }
+
+  .input-wrap .input-icon {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    pointer-events: none;
+  }
+
+  /* ── BOUTON VALIDER ── */
+  .btn-valider {
+    width: 100%;
+    background: linear-gradient(135deg, var(--bleu) 0%, #001EB0 100%);
+    border: none;
+    border-radius: 14px;
+    padding: 16px;
+    color: var(--blanc);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: transform 0.15s, box-shadow 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-valider::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(201,168,76,0.2), transparent);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .btn-valider:hover::before { opacity: 1; }
+  .btn-valider:active { transform: scale(0.98); }
+
+  .btn-valider:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* ── RÉSULTAT ── */
+  .result-box {
+    border-radius: 14px;
+    padding: 18px;
+    margin-top: 14px;
+    display: none;
+    animation: revealPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  @keyframes revealPop {
+    from { opacity: 0; transform: scale(0.9); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  .result-box.correct {
+    background: rgba(39,174,96,0.15);
+    border: 2px solid rgba(39,174,96,0.5);
+  }
+
+  .result-box.wrong {
+    background: rgba(237,41,57,0.12);
+    border: 2px solid rgba(237,41,57,0.4);
+  }
+
+  .result-emoji {
+    font-size: 32px;
+    text-align: center;
+    margin-bottom: 6px;
+  }
+
+  .result-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 2px;
+    text-align: center;
+  }
+
+  .result-box.correct .result-title { color: #4ade80; }
+  .result-box.wrong .result-title   { color: var(--rouge); }
+
+  .result-answer {
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    text-align: center;
+    margin-top: 4px;
+  }
+
+  .result-answer strong {
+    color: var(--or);
+    font-weight: 700;
+  }
+
+  /* ── BOUTON SUIVANT ── */
+  .btn-next {
+    width: 100%;
+    background: transparent;
+    border: 2px solid var(--or);
+    border-radius: 14px;
+    padding: 14px;
+    color: var(--or);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    margin-top: 10px;
+    display: none;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .btn-next:hover {
+    background: var(--or);
+    color: var(--fond);
+  }
+
+  /* ── ÉCRAN FINAL ── */
+  .final-screen {
+    display: none;
+    text-align: center;
+    padding: 40px 20px;
+    animation: slideUp 0.5s ease;
+  }
+
+  .trophy {
+    font-size: 72px;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .final-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    letter-spacing: 4px;
+    color: var(--or);
+    text-shadow: 0 0 30px rgba(201,168,76,0.5);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .final-sub {
+    font-size: 14px;
+    color: var(--gris);
+    margin-bottom: 28px;
+  }
+
+  .final-score-big {
+    background: linear-gradient(135deg, var(--bleu), #001EB0);
+    border: 2px solid var(--or);
+    border-radius: 20px;
+    padding: 28px;
+    margin-bottom: 24px;
+    display: inline-block;
+    min-width: 200px;
+  }
+
+  .final-score-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 72px;
+    color: var(--or);
+    line-height: 1;
+  }
+
+  .final-score-label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  .final-mention {
+    font-size: 15px;
+    color: var(--blanc);
+    font-weight: 600;
+    margin-bottom: 28px;
+  }
+
+  .btn-rejouer {
+    background: linear-gradient(135deg, var(--rouge), #C0001F);
+    border: none;
+    border-radius: 14px;
+    padding: 16px 32px;
+    color: var(--blanc);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+
+  .btn-rejouer:hover { transform: scale(1.03); }
+
+  /* ── DIVIDER BALLON ── */
+  .ball-divider {
+    text-align: center;
+    padding: 12px 0;
+    font-size: 22px;
+    opacity: 0.4;
+  }
+
+  /* ── CANVA URL INPUT ── */
+  .canva-setup {
+    background: rgba(201,168,76,0.06);
+    border: 1px dashed rgba(201,168,76,0.4);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 16px;
+    font-size: 12px;
+    color: var(--gris);
+    line-height: 1.6;
+  }
+
+  .canva-setup strong { color: var(--or); }
+
+  /* Responsive */
+  @media (max-width: 360px) {
+    .hero-title { font-size: 36px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stade-lights"></div>
+
+<div class="container">
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-flag">
+      <span class="f1"></span>
+      <span class="f2"></span>
+      <span class="f3"></span>
+    </div>
+    <h1 class="hero-title">
+      QUI SUIS-JE ?
+      <span>ÉQUIPE DE FRANCE</span>
+    </h1>
+    <p class="hero-subtitle">⚽ Coupe du Monde · Fan Zone ⚽</p>
+  </div>
+
+  <!-- SCORE BAR -->
+  <div class="score-bar">
+    <div>
+      <div class="score-label">Bonne(s)</div>
+      <div class="score-value" id="scoreDisplay">0</div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-bar" id="progressBar" style="width:0%"></div>
+    </div>
+    <div>
+      <div class="score-label">Question</div>
+      <div class="score-value"><span id="qNum">1</span>/9</div>
+    </div>
+  </div>
+
+  <!-- QUIZ ZONE -->
+  <div id="quizZone">
+
+    <!-- NOTICE CANVA (à supprimer après avoir mis les URLs) -->
+    <div class="canva-setup" id="canvaNotice">
+      <strong>📎 Pour activer vos slides Canva :</strong><br>
+      Dans le tableau <code>joueurs</code> en bas de page, remplacez chaque <code>canvaUrl</code> par le lien de partage de votre slide Canva (Mode présentation → Partager → Lien intégrable).
+    </div>
+
+    <!-- CARTE -->
+    <div class="card-panini" id="mainCard">
+      <div class="card-header">
+        <div class="card-num" id="cardNum">01</div>
+        <div class="card-badge">Devine le joueur</div>
+      </div>
+
+      <div class="card-img-wrap">
+        <div class="canva-embed" id="canvaEmbed">
+          <!-- L'iframe Canva s'injecte ici -->
+          <div class="canva-placeholder" id="canvaPlaceholder">
+            <div class="eye-icon">👀</div>
+            <p>Observe bien le joueur<br>sur l'écran principal !</p>
+          </div>
+        </div>
+      </div>
+      <div class="slide-instruction" id="slideInstruction">🔍 Regarde attentivement… qui se cache derrière ce regard ?</div>
+
+      <div class="question-zone">
+        <div class="question-text">Nom du joueur :</div>
+        <div class="input-wrap">
+          <input
+            type="text"
+            id="reponseInput"
+            placeholder="Prénom Nom…"
+            autocomplete="off"
+            autocorrect="off"
+            spellcheck="false"
+          />
+          <span class="input-icon">⚽</span>
+        </div>
+        <button class="btn-valider" id="btnValider" onclick="valider()">VALIDER MA RÉPONSE</button>
+
+        <div class="result-box" id="resultBox">
+          <div class="result-emoji" id="resultEmoji"></div>
+          <div class="result-title" id="resultTitle"></div>
+          <div class="result-answer" id="resultAnswer"></div>
+        </div>
+
+        <button class="btn-next" id="btnNext" onclick="suivant()">JOUEUR SUIVANT →</button>
+      </div>
+    </div>
+
+    <div class="ball-divider">⚽</div>
+  </div>
+
+  <!-- ÉCRAN FINAL -->
+  <div class="final-screen" id="finalScreen">
+    <span class="trophy" id="trophyEmoji">🏆</span>
+    <div class="final-title" id="finalTitle">BRAVO !</div>
+    <p class="final-sub" id="finalSub">Voici ton score final</p>
+    <div class="final-score-big">
+      <div class="final-score-num" id="finalScoreNum">0/9</div>
+      <div class="final-score-label">bonnes réponses</div>
+    </div>
+    <p class="final-mention" id="finalMention"></p>
+    <button class="btn-rejouer" onclick="recommencer()">🔄 REJOUER</button>
+  </div>
+
+</div>
+
+<script>
+// ────────────────────────────────────────────────────────
+// CONFIGURATION — Remplacez les canvaUrl par vos liens
+// ────────────────────────────────────────────────────────
+const joueurs = [
+  {
+    nom: "MALO GUSTO",
+    indice: "Défenseur latéral droit",
+    canvaUrl: ""   // ex: "https://www.canva.com/design/XXXX/view?embed"
+  },
+  {
+    nom: "JULES KOUNDÉ",
+    indice: "Défenseur polyvalent",
+    canvaUrl: ""
+  },
+  {
+    nom: "N'GOLO KANTÉ",
+    indice: "Milieu récupérateur emblématique",
+    canvaUrl: ""
+  },
+  {
+    nom: "BRADLEY BARCOLA",
+    indice: "Ailier gauche du PSG",
+    canvaUrl: ""
+  },
+  {
+    nom: "KYLIAN MBAPPÉ",
+    indice: "Capitaine des Bleus",
+    canvaUrl: ""
+  },
+  {
+    nom: "OUSMANE DEMBÉLÉ",
+    indice: "Ailier droit rapide",
+    canvaUrl: ""
+  },
+  {
+    nom: "MICHAEL OLISE",
+    indice: "Milieu offensif de talent",
+    canvaUrl: ""
+  },
+  {
+    nom: "DÉSIRÉ DOUÉ",
+    indice: "Jeune prodige du PSG",
+    canvaUrl: ""
+  },
+  {
+    nom: "MARCUS THURAM",
+    indice: "Avant-centre de l'Inter Milan",
+    canvaUrl: ""
+  }
+];
+
+// ────────────────────────────────────────────────────────
+let current = 0;
+let score = 0;
+let answered = false;
+
+function normaliser(str) {
+  return str
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9\s]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function verifReponse(input, correct) {
+  const inp = normaliser(input);
+  const cor = normaliser(correct);
+  if (inp === cor) return true;
+
+  // Accepte si le nom de famille ou le prénom correspond
+  const partsInp = inp.split(" ");
+  const partsCor = cor.split(" ");
+  const matchCount = partsInp.filter(p => partsCor.includes(p) && p.length > 2).length;
+  if (matchCount >= 1) return true;
+
+  // Similarité simple (80%)
+  if (cor.includes(inp) && inp.length >= 4) return true;
+
+  return false;
+}
+
+function chargerJoueur(index) {
+  answered = false;
+  const j = joueurs[index];
+
+  document.getElementById('cardNum').textContent = String(index + 1).padStart(2, '0');
+  document.getElementById('qNum').textContent = index + 1;
+  document.getElementById('reponseInput').value = '';
+  document.getElementById('reponseInput').disabled = false;
+  document.getElementById('btnValider').disabled = false;
+  document.getElementById('btnValider').style.display = 'block';
+  document.getElementById('resultBox').style.display = 'none';
+  document.getElementById('btnNext').style.display = 'none';
+
+  const embed = document.getElementById('canvaEmbed');
+
+  if (j.canvaUrl && j.canvaUrl.trim() !== '') {
+    // Injecter l'iframe Canva
+    embed.innerHTML = `<iframe src="${j.canvaUrl}" allowfullscreen loading="lazy"></iframe>`;
+    document.getElementById('canvaNotice').style.display = 'none';
+  } else {
+    // Placeholder visuel
+    embed.innerHTML = `
+      <div class="canva-placeholder">
+        <div class="eye-icon">👀</div>
+        <p><strong style="color:var(--or)">Joueur ${index + 1}</strong><br>Observe la photo sur l'écran !</p>
+      </div>`;
+  }
+
+  // Update progress
+  const pct = (index / joueurs.length) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+
+  // Focus input
+  setTimeout(() => document.getElementById('reponseInput').focus(), 300);
+}
+
+function valider() {
+  if (answered) return;
+  const input = document.getElementById('reponseInput').value.trim();
+  if (!input) {
+    document.getElementById('reponseInput').style.borderColor = 'var(--rouge)';
+    setTimeout(() => document.getElementById('reponseInput').style.borderColor = '', 600);
+    return;
+  }
+
+  answered = true;
+  const j = joueurs[current];
+  const correct = verifReponse(input, j.nom);
+
+  if (correct) score++;
+
+  const box = document.getElementById('resultBox');
+  box.className = 'result-box ' + (correct ? 'correct' : 'wrong');
+  box.style.display = 'block';
+
+  document.getElementById('resultEmoji').textContent = correct ? '🎉' : '😅';
+  document.getElementById('resultTitle').textContent = correct ? 'EXACT !' : 'RATÉ !';
+  document.getElementById('resultAnswer').innerHTML = correct
+    ? `Bien joué, c'est bien <strong>${j.nom}</strong> !`
+    : `La réponse était <strong>${j.nom}</strong>`;
+
+  document.getElementById('scoreDisplay').textContent = score;
+  document.getElementById('reponseInput').disabled = true;
+  document.getElementById('btnValider').style.display = 'none';
+
+  if (current < joueurs.length - 1) {
+    document.getElementById('btnNext').style.display = 'block';
+  } else {
+    setTimeout(() => afficherFinal(), 1200);
+  }
+}
+
+function suivant() {
+  current++;
+  chargerJoueur(current);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function afficherFinal() {
+  document.getElementById('quizZone').style.display = 'none';
+  const final = document.getElementById('finalScreen');
+  final.style.display = 'block';
+
+  document.getElementById('finalScoreNum').textContent = score + '/9';
+  document.getElementById('progressBar').style.width = '100%';
+
+  const pct = score / joueurs.length;
+  let emoji, titre, mention;
+
+  if (pct === 1) {
+    emoji = '🏆'; titre = 'PARFAIT !';
+    mention = 'Tu es un vrai supporter des Bleus ! 🇫🇷';
+  } else if (pct >= 0.77) {
+    emoji = '⭐'; titre = 'EXCELLENT !';
+    mention = 'Tu connais bien tes Bleus !';
+  } else if (pct >= 0.55) {
+    emoji = '🎯'; titre = 'PAS MAL !';
+    mention = 'Encore quelques efforts et tu seras incollable !';
+  } else if (pct >= 0.33) {
+    emoji = '⚽'; titre = 'EN PROGRÈS !';
+    mention = 'Reviens t\'entraîner pour la prochaine mi-temps !';
+  } else {
+    emoji = '😅'; titre = 'AÏÏE !';
+    mention = 'Il faut regarder plus de matchs des Bleus ! 😄';
+  }
+
+  document.getElementById('trophyEmoji').textContent = emoji;
+  document.getElementById('finalTitle').textContent = titre;
+  document.getElementById('finalMention').textContent = mention;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function recommencer() {
+  current = 0;
+  score = 0;
+  document.getElementById('scoreDisplay').textContent = '0';
+  document.getElementById('finalScreen').style.display = 'none';
+  document.getElementById('quizZone').style.display = 'block';
+  chargerJoueur(0);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Valider avec Entrée
+document.addEventListener('DOMContentLoaded', () => {
+  chargerJoueur(0);
+  document.getElementById('reponseInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') valider();
+  });
+});
+</script>
+</body>
+</html>
